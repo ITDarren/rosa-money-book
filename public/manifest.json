@@ -1,0 +1,17 @@
+{
+  "name": "寶兒專屬記帳本",
+  "short_name": "寶兒記帳",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#ffffff",
+  "description": "個人專屬記帳本",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
