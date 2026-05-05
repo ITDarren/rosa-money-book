@@ -465,7 +465,7 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen bg-slate-50 flex flex-col items-center">
+    <div className="h-[100dvh] bg-slate-50 flex flex-col items-center">
       {/* Mobile-centric Container */}
       <div className="w-full max-w-md h-full bg-white shadow-xl shadow-slate-200 flex flex-col relative overflow-hidden">
 
@@ -1039,7 +1039,7 @@ export default function App() {
         </main>
 
         {/* Bottom Navigation */}
-        <nav className="h-20 bg-white border-t border-slate-50 flex items-center justify-between px-2 z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+        <nav className="h-[calc(5rem+env(safe-area-inset-bottom))] pb-[env(safe-area-inset-bottom)] bg-white border-t border-slate-50 flex items-center justify-between px-2 z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
           <button onClick={() => setActiveTab("history")} className={`nav-item ${activeTab === "history" ? "nav-item-active" : ""}`}>
             <History size={22} strokeWidth={2.5} />
             <span className="text-[9px] font-bold">明細</span>
