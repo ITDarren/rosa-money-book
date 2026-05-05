@@ -1,0 +1,57 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile with total balance and activity tracking.",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "balance": { "type": "number", "description": "Total balance across all accounts" },
+        "lastActive": { "type": "string", "format": "date-time" },
+        "isGlobalHidden": { "type": "boolean" },
+        "hiddenCategoryIds": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["displayName", "balance", "lastActive"]
+    },
+    "Transaction": {
+      "title": "Bank Transaction",
+      "description": "An entry in the ledger representing an expense or income.",
+      "type": "object",
+      "properties": {
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["expense", "income"] },
+        "category": { "type": "string" },
+        "note": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["amount", "type", "category", "timestamp"]
+    },
+    "Category": {
+      "title": "Custom Category",
+      "description": "User defined category for transactions.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "emoji": { "type": "string" },
+        "type": { "type": "string", "enum": ["expense", "income"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "emoji", "type", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Contains user profile and stats."
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "The ledger entries for the user."
+    },
+    "/users/{userId}/categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Custom categories defined by the user."
+    }
+  }
+}
