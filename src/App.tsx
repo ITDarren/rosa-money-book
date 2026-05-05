@@ -4,15 +4,15 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { 
-  onSnapshot, 
-  collection, 
-  query, 
-  orderBy, 
-  addDoc, 
-  updateDoc, 
+import {
+  onSnapshot,
+  collection,
+  query,
+  orderBy,
+  addDoc,
+  updateDoc,
   deleteDoc,
-  doc, 
+  doc,
   getDoc,
   setDoc,
   Timestamp,
@@ -20,11 +20,11 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { motion, AnimatePresence } from "motion/react";
-import { 
-  TrendingDown, 
-  TrendingUp, 
-  History, 
-  BarChart3, 
+import {
+  TrendingDown,
+  TrendingUp,
+  History,
+  BarChart3,
   Book,
   ClipboardList,
   LogOut,
@@ -45,10 +45,10 @@ import {
   Delete,
   FileText
 } from "lucide-react";
-import { 
-  PieChart as RePieChart, 
-  Pie, 
-  Cell, 
+import {
+  PieChart as RePieChart,
+  Pie,
+  Cell,
   ResponsiveContainer,
   Tooltip,
   LineChart,
@@ -61,9 +61,9 @@ import {
 } from "recharts";
 
 import { db, auth, loginWithGoogle, handleFirestoreError, OperationType } from "./lib/firebase";
-import { 
-  Transaction, 
-  UserProfile, 
+import {
+  Transaction,
+  UserProfile,
   CustomCategory,
   CATEGORIES,
   EXPENSE_CATEGORIES,
@@ -298,7 +298,7 @@ export default function App() {
     const groups: { [key: string]: Transaction[] } = {};
     if (!viewMonth) return groups;
     const [y, m] = viewMonth.split('-').map(Number);
-    
+
     transactions
       .filter(t => {
         const d = getSafeDate(t.timestamp);
@@ -319,7 +319,7 @@ export default function App() {
       // Using a simple split and reduce to avoid eval()
       const tokens = expr.split(/([+-])/);
       if (tokens.length === 0) return "";
-      
+
       let total = parseInt(tokens[0]) || 0;
       for (let i = 1; i < tokens.length; i += 2) {
         const op = tokens[i];
@@ -400,7 +400,7 @@ export default function App() {
 
       // Calculate balance diff
       let balanceDiff = 0;
-      
+
       // First, "undo" the original
       balanceDiff += original.type === "income" ? -original.amount : original.amount;
       // Then, "apply" the new one
@@ -441,7 +441,7 @@ export default function App() {
   if (!user) {
     return (
       <div className="relative min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white border border-slate-100 rounded-[2.5rem] p-8 max-w-md w-full text-center space-y-6 shadow-xl shadow-slate-200"
@@ -449,9 +449,9 @@ export default function App() {
           <div className="inline-flex p-4 rounded-full bg-app-primary/10 text-app-primary mb-2">
             <TrendingUp size={48} />
           </div>
-          <h1 className="text-3xl font-bold text-slate-800">簡單記帳</h1>
+          <h1 className="text-3xl font-bold text-slate-800">寶兒專屬記帳本</h1>
           <p className="text-slate-400">
-            開始規劃您的財務生活，每一筆支出都是成長的腳印。
+            開始記錄妳的生活點滴，每一筆支出與收入都是成長的足跡。
           </p>
           <button
             onClick={() => loginWithGoogle()}
@@ -468,12 +468,12 @@ export default function App() {
     <div className="h-screen bg-slate-50 flex flex-col items-center">
       {/* Mobile-centric Container */}
       <div className="w-full max-w-md h-full bg-white shadow-xl shadow-slate-200 flex flex-col relative overflow-hidden">
-        
+
         {/* Header */}
         <header className="app-header">
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center gap-2">
-              <button 
+              <button
                 onClick={() => {
                   const [y, m] = viewMonth.split('-').map(Number);
                   const d = new Date(y, m - 2, 1);
@@ -485,15 +485,15 @@ export default function App() {
               </button>
 
               <div className="relative">
-                <div 
+                <div
                   className="flex items-center gap-2 bg-black/10 px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 transition-transform relative overflow-hidden"
                 >
                   <span>{viewMonth.split('-')[0]}</span>
                   <div className="w-px h-3 bg-black/20 mx-1" />
                   <span className="text-sm">{viewMonth.split('-')[1]}</span>
-                  <input 
+                  <input
                     ref={viewMonthRef}
-                    type="month" 
+                    type="month"
                     value={viewMonth}
                     onChange={(e) => setViewMonth(e.target.value)}
                     className="absolute inset-0 opacity-0 cursor-pointer"
@@ -501,7 +501,7 @@ export default function App() {
                 </div>
               </div>
 
-              <button 
+              <button
                 onClick={() => {
                   const [y, m] = viewMonth.split('-').map(Number);
                   const d = new Date(y, m, 1);
@@ -512,7 +512,7 @@ export default function App() {
                 <ChevronRight size={16} />
               </button>
             </div>
-            
+
             <button onClick={() => auth.signOut()} className="text-app-accent/60">
               <LogOut size={20} />
             </button>
@@ -527,7 +527,7 @@ export default function App() {
               });
               const expenseTotal = filtered.filter(t => t.type === "expense").reduce((a, b) => a + b.amount, 0);
               const incomeTotal = filtered.filter(t => t.type === "income").reduce((a, b) => a + b.amount, 0);
-              
+
               return (
                 <>
                   <div>
@@ -550,7 +550,7 @@ export default function App() {
 
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto px-4 -mt-6">
-          
+
           <AnimatePresence mode="wait">
             {activeTab === "history" && (
               <motion.div
@@ -603,7 +603,7 @@ export default function App() {
             )}
 
             {activeTab === "stats" && (
-              <motion.div 
+              <motion.div
                 key="stats"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -614,11 +614,11 @@ export default function App() {
                   <div className="flex flex-col gap-5 mb-8">
                     <div className="flex justify-center">
                       <div className="flex bg-slate-100 p-1 rounded-full w-full max-w-[200px]">
-                        <button 
+                        <button
                           onClick={() => setStatsTimeframe("month")}
                           className={`flex-1 py-1.5 text-[10px] font-bold rounded-full transition-all ${statsTimeframe === "month" ? "bg-white shadow-sm text-app-accent" : "text-slate-400"}`}
                         >月檢視</button>
-                        <button 
+                        <button
                           onClick={() => setStatsTimeframe("year")}
                           className={`flex-1 py-1.5 text-[10px] font-bold rounded-full transition-all ${statsTimeframe === "year" ? "bg-white shadow-sm text-app-accent" : "text-slate-400"}`}
                         >年檢視</button>
@@ -627,14 +627,14 @@ export default function App() {
 
                     <div className="flex justify-center">
                       <div className="flex bg-slate-100 p-1 rounded-2xl w-full">
-                        <button 
+                        <button
                           onClick={() => setStatsType("expense")}
                           className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${statsType === "expense" ? "bg-white shadow-sm text-red-500" : "text-slate-400"}`}
                         >
                           <div className={`w-1.5 h-1.5 rounded-full ${statsType === "expense" ? "bg-red-500" : "bg-slate-300"}`} />
                           支出統計
                         </button>
-                        <button 
+                        <button
                           onClick={() => setStatsType("income")}
                           className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${statsType === "income" ? "bg-white shadow-sm text-emerald-500" : "text-slate-400"}`}
                         >
@@ -650,11 +650,11 @@ export default function App() {
                       const [y, m] = viewMonth.split('-').map(Number);
                       const timeframeTransactions = transactions.filter(t => {
                         const tDate = getSafeDate(t.timestamp);
-                        return statsTimeframe === "month" 
+                        return statsTimeframe === "month"
                           ? (tDate.getMonth() + 1 === m && tDate.getFullYear() === y)
                           : tDate.getFullYear() === y;
                       });
-                      
+
                       const chartData = [
                         ...Object.entries(CATEGORIES),
                         ...customCategories.map(c => [c.id || c.name, c.name])
@@ -666,7 +666,7 @@ export default function App() {
                             .reduce((acc, curr) => acc + curr.amount, 0)
                         }))
                         .filter(d => d.value > 0);
-                      
+
                       const totalAmount = chartData.reduce((acc, curr) => acc + curr.value, 0);
 
                       return (
@@ -689,7 +689,7 @@ export default function App() {
                                     ][index % 7]} />
                                   ))}
                                 </Pie>
-                                <Tooltip 
+                                <Tooltip
                                   content={({ active, payload }) => {
                                     if (active && payload && payload.length) {
                                       return (
@@ -730,68 +730,68 @@ export default function App() {
                 </div>
 
                 <div className="space-y-3 pb-8">
-                   {(() => {
-                      const [y, m] = viewMonth.split('-').map(Number);
-                      const timeframeTransactions = transactions.filter(t => {
-                        const tDate = getSafeDate(t.timestamp);
-                        return statsTimeframe === "month" 
-                          ? (tDate.getMonth() + 1 === m && tDate.getFullYear() === y)
-                          : tDate.getFullYear() === y;
-                      });
-                      
-                      const summaryData = [
-                        ...Object.entries(CATEGORIES),
-                        ...customCategories.map(c => [c.id || c.name, c.name])
-                      ]
-                        .map(([key, val]) => ({
-                          id: key,
-                          name: val,
-                          value: timeframeTransactions
-                            .filter(t => t.category === key && t.type === statsType)
-                            .reduce((acc, curr) => acc + curr.amount, 0)
-                        }))
-                        .filter(d => d.value > 0)
-                        .sort((a, b) => b.value - a.value);
+                  {(() => {
+                    const [y, m] = viewMonth.split('-').map(Number);
+                    const timeframeTransactions = transactions.filter(t => {
+                      const tDate = getSafeDate(t.timestamp);
+                      return statsTimeframe === "month"
+                        ? (tDate.getMonth() + 1 === m && tDate.getFullYear() === y)
+                        : tDate.getFullYear() === y;
+                    });
 
-                      const totalAmount = summaryData.reduce((acc, curr) => acc + curr.value, 0);
+                    const summaryData = [
+                      ...Object.entries(CATEGORIES),
+                      ...customCategories.map(c => [c.id || c.name, c.name])
+                    ]
+                      .map(([key, val]) => ({
+                        id: key,
+                        name: val,
+                        value: timeframeTransactions
+                          .filter(t => t.category === key && t.type === statsType)
+                          .reduce((acc, curr) => acc + curr.amount, 0)
+                      }))
+                      .filter(d => d.value > 0)
+                      .sort((a, b) => b.value - a.value);
 
-                      return summaryData.map((item, idx) => (
-                        <div key={item.id} className="bg-white p-5 rounded-[2rem] border border-slate-100 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
-                          <div className="flex items-center gap-4">
-                            <div 
-                              className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg shadow-inner"
-                              style={{ backgroundColor: `${["#ffcc00", "#fbbf24", "#fcd34d", "#fb7185", "#38bdf8", "#818cf8", "#34d399"][idx % 7]}20` }}
-                            >
-                              {getCategoryEmoji(item.id, customCategories)}
-                            </div>
-                            <div>
-                              <p className="text-sm font-bold text-slate-700">{item.name}</p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
-                                  <motion.div 
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${(item.value / totalAmount) * 100}%` }}
-                                    className="h-full" 
-                                    style={{ backgroundColor: ["#ffcc00", "#fbbf24", "#fcd34d", "#fb7185", "#38bdf8", "#818cf8", "#34d399"][idx % 7] }}
-                                  />
-                                </div>
-                                <span className="text-[8px] font-bold text-slate-400">{Math.round((item.value / totalAmount) * 100)}%</span>
-                              </div>
-                            </div>
+                    const totalAmount = summaryData.reduce((acc, curr) => acc + curr.value, 0);
+
+                    return summaryData.map((item, idx) => (
+                      <div key={item.id} className="bg-white p-5 rounded-[2rem] border border-slate-100 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
+                        <div className="flex items-center gap-4">
+                          <div
+                            className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg shadow-inner"
+                            style={{ backgroundColor: `${["#ffcc00", "#fbbf24", "#fcd34d", "#fb7185", "#38bdf8", "#818cf8", "#34d399"][idx % 7]}20` }}
+                          >
+                            {getCategoryEmoji(item.id, customCategories)}
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm font-mono font-bold text-slate-800">${item.value.toLocaleString()}</p>
-                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{statsType === "income" ? "收入金額" : "支出金額"}</p>
+                          <div>
+                            <p className="text-sm font-bold text-slate-700">{item.name}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${(item.value / totalAmount) * 100}%` }}
+                                  className="h-full"
+                                  style={{ backgroundColor: ["#ffcc00", "#fbbf24", "#fcd34d", "#fb7185", "#38bdf8", "#818cf8", "#34d399"][idx % 7] }}
+                                />
+                              </div>
+                              <span className="text-[8px] font-bold text-slate-400">{Math.round((item.value / totalAmount) * 100)}%</span>
+                            </div>
                           </div>
                         </div>
-                      ));
-                   })()}
+                        <div className="text-right">
+                          <p className="text-sm font-mono font-bold text-slate-800">${item.value.toLocaleString()}</p>
+                          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{statsType === "income" ? "收入金額" : "支出金額"}</p>
+                        </div>
+                      </div>
+                    ));
+                  })()}
                 </div>
               </motion.div>
             )}
 
             {activeTab === "reports" && (
-              <motion.div 
+              <motion.div
                 key="reports"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -802,14 +802,14 @@ export default function App() {
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-sm font-bold text-slate-800">收支趨勢 (Trend)</h3>
                     <div className="flex items-center gap-2">
-                       <div className="flex items-center gap-1">
-                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                         <span className="text-[10px] text-slate-400 font-bold">收入</span>
-                       </div>
-                       <div className="flex items-center gap-1">
-                         <div className="w-1.5 h-1.5 rounded-full bg-red-400"></div>
-                         <span className="text-[10px] text-slate-400 font-bold">支出</span>
-                       </div>
+                      <div className="flex items-center gap-1">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                        <span className="text-[10px] text-slate-400 font-bold">收入</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+                        <span className="text-[10px] text-slate-400 font-bold">支出</span>
+                      </div>
                     </div>
                   </div>
 
@@ -821,7 +821,7 @@ export default function App() {
                         const d = new Date(now);
                         d.setDate(now.getDate() - i);
                         const dayStr = `${d.getMonth() + 1}/${d.getDate()}`;
-                        
+
                         const dayTransactions = transactions.filter(t => {
                           const td = getSafeDate(t.timestamp);
                           return td.getFullYear() === d.getFullYear() && td.getMonth() === d.getMonth() && td.getDate() === d.getDate();
@@ -839,22 +839,22 @@ export default function App() {
                           <AreaChart data={trendData}>
                             <defs>
                               <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
-                                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                               </linearGradient>
                               <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2}/>
-                                <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2} />
+                                <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                               </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                            <XAxis 
-                              dataKey="day" 
-                              axisLine={false} 
-                              tickLine={false} 
+                            <XAxis
+                              dataKey="day"
+                              axisLine={false}
+                              tickLine={false}
                               tick={{ fontSize: 8, fill: '#94a3b8' }}
                             />
-                            <Tooltip 
+                            <Tooltip
                               contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', fontSize: '10px' }}
                             />
                             <Area type="monotone" dataKey="income" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorIncome)" />
@@ -877,7 +877,7 @@ export default function App() {
                       });
                       const exp = filtered.filter(t => t.type === "expense").reduce((a, b) => a + b.amount, 0);
                       const inc = filtered.filter(t => t.type === "income").reduce((a, b) => a + b.amount, 0);
-                      
+
                       return (
                         <>
                           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
@@ -901,7 +901,7 @@ export default function App() {
             )}
 
             {activeTab === "profile" && (
-              <motion.div 
+              <motion.div
                 key="profile"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -919,7 +919,7 @@ export default function App() {
                   <h2 className="text-xl font-bold text-slate-800">{profile?.displayName || "新用戶"}</h2>
                   <p className="text-sm text-slate-400">{user?.email}</p>
                 </div>
- 
+
                 <div className="bg-white rounded-3xl border border-slate-100 divide-y divide-slate-50 shadow-sm">
                   <div className="p-4 flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-600">總餘額</span>
@@ -939,11 +939,11 @@ export default function App() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-slate-800">分類項目管理</h3>
                     <div className="flex bg-slate-50 p-1 rounded-xl">
-                      <button 
+                      <button
                         onClick={() => setCatManageType("expense")}
                         className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-all ${catManageType === "expense" ? "bg-white shadow-sm text-red-500" : "text-slate-400"}`}
                       >支出</button>
-                      <button 
+                      <button
                         onClick={() => setCatManageType("income")}
                         className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-all ${catManageType === "income" ? "bg-white shadow-sm text-emerald-500" : "text-slate-400"}`}
                       >收入</button>
@@ -951,7 +951,7 @@ export default function App() {
                   </div>
 
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       onClick={() => {
                         setNewCatName("");
                         setNewCatEmoji("✨");
@@ -966,29 +966,29 @@ export default function App() {
                   <div className="space-y-4">
                     {/* Default Categories Section */}
                     <div className="space-y-2">
-                       <p className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-1">內建分類</p>
-                       <div className="grid grid-cols-2 gap-2">
-                         {Object.entries(catManageType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES).map(([id, label]) => (
-                           <div key={id} className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                             <div className="flex items-center gap-2 overflow-hidden">
-                               <span className="text-lg flex-shrink-0">{getCategoryEmoji(id)}</span>
-                               <span className="text-xs font-medium text-slate-600 truncate">{label}</span>
-                             </div>
-                             <button 
-                               onClick={() => toggleCategoryVisibility(id)}
-                               className={`p-1.5 transition-colors ${profile?.hiddenCategoryIds?.includes(id) ? 'text-blue-500' : 'text-slate-200 hover:text-slate-400'}`}
-                             >
-                               {profile?.hiddenCategoryIds?.includes(id) ? <EyeOff size={14} /> : <Eye size={14} />}
-                             </button>
-                           </div>
-                         ))}
-                       </div>
+                      <p className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-1">內建分類</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {Object.entries(catManageType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES).map(([id, label]) => (
+                          <div key={id} className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div className="flex items-center gap-2 overflow-hidden">
+                              <span className="text-lg flex-shrink-0">{getCategoryEmoji(id)}</span>
+                              <span className="text-xs font-medium text-slate-600 truncate">{label}</span>
+                            </div>
+                            <button
+                              onClick={() => toggleCategoryVisibility(id)}
+                              className={`p-1.5 transition-colors ${profile?.hiddenCategoryIds?.includes(id) ? 'text-blue-500' : 'text-slate-200 hover:text-slate-400'}`}
+                            >
+                              {profile?.hiddenCategoryIds?.includes(id) ? <EyeOff size={14} /> : <Eye size={14} />}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Custom Categories Section */}
                     <div className="space-y-2">
-                       <p className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-1">自訂分類</p>
-                       {customCategories.filter(c => c.type === catManageType).length > 0 ? (
+                      <p className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-1">自訂分類</p>
+                      {customCategories.filter(c => c.type === catManageType).length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
                           {customCategories.filter(c => c.type === catManageType).map(cat => (
                             <div key={cat.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
@@ -997,13 +997,13 @@ export default function App() {
                                 <span className="text-xs font-medium text-slate-600 truncate">{cat.name}</span>
                               </div>
                               <div className="flex items-center gap-1">
-                                <button 
+                                <button
                                   onClick={() => toggleCategoryVisibility(cat.id!)}
                                   className={`p-1.5 transition-colors ${profile?.hiddenCategoryIds?.includes(cat.id!) ? 'text-blue-500' : 'text-slate-200 hover:text-slate-400'}`}
                                 >
                                   {profile?.hiddenCategoryIds?.includes(cat.id!) ? <EyeOff size={14} /> : <Eye size={14} />}
                                 </button>
-                                <button 
+                                <button
                                   onClick={() => handleDeleteCustomCategory(cat.id!)}
                                   className="p-1.5 text-slate-200 hover:text-red-400 transition-colors"
                                 >
@@ -1022,7 +1022,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <button 
+                <button
                   onClick={() => auth.signOut()}
                   className="w-full bg-white border border-red-50 text-red-400 py-4 rounded-2xl font-bold active:bg-red-50 transition-colors"
                 >
@@ -1043,9 +1043,9 @@ export default function App() {
             <LucidePieChart size={22} strokeWidth={2.5} />
             <span className="text-[9px] font-bold">類別</span>
           </button>
-          
+
           <div className="flex-1 flex justify-center -mt-10">
-            <button 
+            <button
               onClick={() => setIsAdding(true)}
               className="w-14 h-14 bg-app-primary rounded-full shadow-lg shadow-app-primary/40 flex items-center justify-center text-app-accent active:scale-95 transition-transform"
             >
@@ -1071,14 +1071,14 @@ export default function App() {
             <header className="px-6 pt-12 pb-4 flex items-center justify-between">
               <button onClick={resetEntry} className="text-slate-400 font-bold text-sm">取消</button>
               <div className="flex bg-slate-100 p-1 rounded-full w-40">
-                <button 
+                <button
                   onClick={() => {
                     setTransactionType("expense");
                     setSelectedCategory("Food");
                   }}
                   className={`flex-1 py-1 text-[10px] font-bold rounded-full transition-all ${transactionType === "expense" ? "bg-white shadow-sm" : "opacity-40"}`}
                 >支出</button>
-                <button 
+                <button
                   onClick={() => {
                     setTransactionType("income");
                     setSelectedCategory("Salary");
@@ -1096,105 +1096,105 @@ export default function App() {
                 {Object.entries(transactionType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES)
                   .filter(([id]) => !(profile?.hiddenCategoryIds || []).includes(id))
                   .map(([id, label]) => (
-                  <button 
-                    key={id} 
-                    onClick={() => setSelectedCategory(id)}
-                    className={`category-chip ${selectedCategory === id ? "category-chip-active" : ""}`}
-                  >
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl bg-slate-50 border border-slate-100 ${selectedCategory === id ? "bg-app-primary/10 border-app-primary" : ""}`}>
-                      {getCategoryEmoji(id, customCategories)}
-                    </div>
-                    <span className="text-[10px] font-bold whitespace-nowrap">{label}</span>
-                  </button>
-                ))}
-                
+                    <button
+                      key={id}
+                      onClick={() => setSelectedCategory(id)}
+                      className={`category-chip ${selectedCategory === id ? "category-chip-active" : ""}`}
+                    >
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl bg-slate-50 border border-slate-100 ${selectedCategory === id ? "bg-app-primary/10 border-app-primary" : ""}`}>
+                        {getCategoryEmoji(id, customCategories)}
+                      </div>
+                      <span className="text-[10px] font-bold whitespace-nowrap">{label}</span>
+                    </button>
+                  ))}
+
                 {/* Custom Categories */}
                 {customCategories
                   .filter(c => c.type === transactionType && !(profile?.hiddenCategoryIds || []).includes(c.id!))
                   .map((cat) => (
-                  <button 
-                    key={cat.id} 
-                    onClick={() => setSelectedCategory(cat.id!)}
-                    className={`category-chip ${selectedCategory === cat.id ? "category-chip-active" : ""}`}
-                  >
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl bg-slate-50 border border-slate-100 ${selectedCategory === cat.id ? "bg-app-primary/10 border-app-primary" : ""}`}>
-                      {cat.emoji}
-                    </div>
-                    <span className="text-[10px] font-bold whitespace-nowrap">{cat.name}</span>
-                  </button>
-                ))}
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedCategory(cat.id!)}
+                      className={`category-chip ${selectedCategory === cat.id ? "category-chip-active" : ""}`}
+                    >
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl bg-slate-50 border border-slate-100 ${selectedCategory === cat.id ? "bg-app-primary/10 border-app-primary" : ""}`}>
+                        {cat.emoji}
+                      </div>
+                      <span className="text-[10px] font-bold whitespace-nowrap">{cat.name}</span>
+                    </button>
+                  ))}
               </div>
             </main>
 
             {/* Input & Keypad */}
             <div className="bg-white border-t border-slate-100 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
               <div className="px-6 py-4 flex items-center justify-between">
-                 <div className="flex items-center gap-2">
-                   <span className="text-xs font-bold text-slate-400 uppercase">備註:</span>
-                   <input 
-                     value={noteValue}
-                     onChange={(e) => setNoteValue(e.target.value)}
-                     placeholder="點擊輸入備註..." 
-                     className="bg-transparent text-sm focus:outline-none"
-                   />
-                 </div>
-                 <span className="text-3xl font-mono font-bold text-slate-800">
-                   {keypadValue || "0"}
-                 </span>
-               </div>
-               
-               <div className="grid grid-cols-4 border-t border-slate-50">
-                 {["7", "8", "9", "today"].map(key => (
-                   key === "today" ? (
-                     <div 
-                       key={key} 
-                       className="keypad-button flex items-center justify-center gap-1.5 cursor-pointer active:bg-slate-50 transition-colors relative"
-                     >
-                       <Calendar size={18} className="text-app-primary" />
-                        <span className="text-xs font-bold text-slate-600">
-                          {(() => {
-                            const today = new Date().toISOString().split("T")[0];
-                            if (selectedDate === today) return "今日";
-                            const parts = selectedDate.split("-");
-                            return `${parts[1]}/${parts[2]}`;
-                          })()}
-                        </span>
-                        <input 
-                          type="date" 
-                          value={selectedDate}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setSelectedDate(val || new Date().toISOString().split("T")[0]);
-                          }}
-                          className="absolute inset-0 opacity-0 cursor-pointer"
-                        />
-                     </div>
-                   ) : (
-                     <button 
-                       key={key} 
-                       onClick={() => handleKeypadPress(key)} 
-                       className="keypad-button"
-                     >
-                       {key}
-                     </button>
-                   )
-                 ))}
-                 {["4", "5", "6", "+"].map(key => (
-                   <button key={key} onClick={() => handleKeypadPress(key)} className="keypad-button">{key}</button>
-                 ))}
-                 {["1", "2", "3", "-"].map(key => (
-                   <button key={key} onClick={() => handleKeypadPress(key)} className="keypad-button">{key}</button>
-                 ))}
-                 {["0", "00", "del", "done"].map(key => (
-                   <button 
-                     key={key} 
-                     onClick={() => key === "done" ? handleEquals() : handleKeypadPress(key)} 
-                     className={`keypad-button ${key === "done" ? "!bg-yellow-400 !text-slate-900 border-yellow-500 shadow-lg shadow-yellow-400/20" : ""}`}
-                   >
-                     {key === "del" ? <Delete size={20} /> : key === "done" ? "=" : key}
-                   </button>
-                 ))}
-               </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-slate-400 uppercase">備註:</span>
+                  <input
+                    value={noteValue}
+                    onChange={(e) => setNoteValue(e.target.value)}
+                    placeholder="點擊輸入備註..."
+                    className="bg-transparent text-sm focus:outline-none"
+                  />
+                </div>
+                <span className="text-3xl font-mono font-bold text-slate-800">
+                  {keypadValue || "0"}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-4 border-t border-slate-50">
+                {["7", "8", "9", "today"].map(key => (
+                  key === "today" ? (
+                    <div
+                      key={key}
+                      className="keypad-button flex items-center justify-center gap-1.5 cursor-pointer active:bg-slate-50 transition-colors relative"
+                    >
+                      <Calendar size={18} className="text-app-primary" />
+                      <span className="text-xs font-bold text-slate-600">
+                        {(() => {
+                          const today = new Date().toISOString().split("T")[0];
+                          if (selectedDate === today) return "今日";
+                          const parts = selectedDate.split("-");
+                          return `${parts[1]}/${parts[2]}`;
+                        })()}
+                      </span>
+                      <input
+                        type="date"
+                        value={selectedDate}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setSelectedDate(val || new Date().toISOString().split("T")[0]);
+                        }}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      key={key}
+                      onClick={() => handleKeypadPress(key)}
+                      className="keypad-button"
+                    >
+                      {key}
+                    </button>
+                  )
+                ))}
+                {["4", "5", "6", "+"].map(key => (
+                  <button key={key} onClick={() => handleKeypadPress(key)} className="keypad-button">{key}</button>
+                ))}
+                {["1", "2", "3", "-"].map(key => (
+                  <button key={key} onClick={() => handleKeypadPress(key)} className="keypad-button">{key}</button>
+                ))}
+                {["0", "00", "del", "done"].map(key => (
+                  <button
+                    key={key}
+                    onClick={() => key === "done" ? handleEquals() : handleKeypadPress(key)}
+                    className={`keypad-button ${key === "done" ? "!bg-yellow-400 !text-slate-900 border-yellow-500 shadow-lg shadow-yellow-400/20" : ""}`}
+                  >
+                    {key === "del" ? <Delete size={20} /> : key === "done" ? "=" : key}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -1212,7 +1212,7 @@ export default function App() {
             >
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-xl font-bold text-slate-800">修改收支紀錄</h2>
-                <button 
+                <button
                   onClick={() => setEditingTransaction(null)}
                   className="p-2 bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors"
                 >
@@ -1223,10 +1223,10 @@ export default function App() {
               <div className="space-y-6">
                 <div>
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">金額</label>
-                  <input 
+                  <input
                     type="number"
                     value={editingTransaction.amount}
-                    onChange={(e) => setEditingTransaction({...editingTransaction, amount: Number(e.target.value)})}
+                    onChange={(e) => setEditingTransaction({ ...editingTransaction, amount: Number(e.target.value) })}
                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-2xl font-mono font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-app-primary/20"
                   />
                 </div>
@@ -1238,43 +1238,41 @@ export default function App() {
                     {Object.entries(editingTransaction.type === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES)
                       .filter(([id]) => !(profile?.hiddenCategoryIds || []).includes(id) || editingTransaction.category === id)
                       .map(([key, label]) => (
-                      <button
-                        key={key}
-                        onClick={() => setEditingTransaction({...editingTransaction, category: key})}
-                        className={`p-2 rounded-xl text-[10px] font-bold transition-all border ${
-                          editingTransaction.category === key 
-                          ? "bg-app-primary text-app-accent border-app-primary shadow-lg shadow-app-primary/20" 
-                          : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
+                        <button
+                          key={key}
+                          onClick={() => setEditingTransaction({ ...editingTransaction, category: key })}
+                          className={`p-2 rounded-xl text-[10px] font-bold transition-all border ${editingTransaction.category === key
+                              ? "bg-app-primary text-app-accent border-app-primary shadow-lg shadow-app-primary/20"
+                              : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"
+                            }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
                     {/* Custom */}
                     {customCategories
                       .filter(c => c.type === editingTransaction.type && (!(profile?.hiddenCategoryIds || []).includes(c.id!) || editingTransaction.category === c.id))
                       .map((cat) => (
-                      <button
-                        key={cat.id}
-                        onClick={() => setEditingTransaction({...editingTransaction, category: cat.id!})}
-                        className={`p-2 rounded-xl text-[10px] font-bold transition-all border ${
-                          editingTransaction.category === cat.id 
-                          ? "bg-app-primary text-app-accent border-app-primary shadow-lg shadow-app-primary/20" 
-                          : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"
-                        }`}
-                      >
-                        {cat.emoji} {cat.name}
-                      </button>
-                    ))}
+                        <button
+                          key={cat.id}
+                          onClick={() => setEditingTransaction({ ...editingTransaction, category: cat.id! })}
+                          className={`p-2 rounded-xl text-[10px] font-bold transition-all border ${editingTransaction.category === cat.id
+                              ? "bg-app-primary text-app-accent border-app-primary shadow-lg shadow-app-primary/20"
+                              : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"
+                            }`}
+                        >
+                          {cat.emoji} {cat.name}
+                        </button>
+                      ))}
                   </div>
                 </div>
 
                 <div>
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">備註</label>
-                  <input 
+                  <input
                     type="text"
                     value={editingTransaction.note}
-                    onChange={(e) => setEditingTransaction({...editingTransaction, note: e.target.value})}
+                    onChange={(e) => setEditingTransaction({ ...editingTransaction, note: e.target.value })}
                     placeholder="寫點什麼..."
                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm text-slate-600 focus:outline-none"
                   />
@@ -1282,12 +1280,11 @@ export default function App() {
 
                 <div className="flex gap-3 pt-4">
                   <button
-                    onClick={() => setEditingTransaction({...editingTransaction, type: editingTransaction.type === "income" ? "expense" : "income"})}
-                    className={`flex-1 p-4 rounded-2xl font-bold transition-all border ${
-                      editingTransaction.type === "income"
-                      ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                      : "bg-red-50 text-red-600 border-red-100"
-                    }`}
+                    onClick={() => setEditingTransaction({ ...editingTransaction, type: editingTransaction.type === "income" ? "expense" : "income" })}
+                    className={`flex-1 p-4 rounded-2xl font-bold transition-all border ${editingTransaction.type === "income"
+                        ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                        : "bg-red-50 text-red-600 border-red-100"
+                      }`}
                   >
                     {editingTransaction.type === "income" ? "💰 收入" : "🐾 支出"}
                   </button>
@@ -1303,19 +1300,19 @@ export default function App() {
           </div>
         )}
       </AnimatePresence>
-  
+
       {/* Delete Confirmation Modal */}
       <AnimatePresence>
         {showDeleteConfirm && (
           <div className="fixed inset-0 z-[80] flex items-center justify-center p-6">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowDeleteConfirm(null)}
               className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
             />
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -1330,13 +1327,13 @@ export default function App() {
                   <p className="text-sm text-slate-400 mt-2">刪除後將無法恢復。</p>
                 </div>
                 <div className="flex gap-3 pt-2">
-                  <button 
+                  <button
                     onClick={() => setShowDeleteConfirm(null)}
                     className="flex-1 bg-slate-100 text-slate-400 font-bold py-4 rounded-2xl active:scale-95 transition-all"
                   >
                     取消
                   </button>
-                  <button 
+                  <button
                     onClick={async () => {
                       await handleDeleteCustomCategory(showDeleteConfirm);
                       setShowDeleteConfirm(null);
@@ -1356,14 +1353,14 @@ export default function App() {
       <AnimatePresence>
         {showAddCategory && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowAddCategory(null)}
               className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             />
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -1379,7 +1376,7 @@ export default function App() {
                 <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-4xl shadow-inner border border-slate-100">
                   {newCatEmoji}
                 </div>
-                
+
                 <div className="w-full space-y-4">
                   <div className="text-center">
                     <h3 className="text-xl font-bold text-slate-800">
@@ -1391,14 +1388,14 @@ export default function App() {
                   <div className="space-y-3">
                     <div>
                       <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 mb-1.5 block">圖示 Emoji</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={newCatEmoji}
                         onChange={(e) => setNewCatEmoji(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl text-center text-2xl focus:ring-2 focus:ring-app-primary/20 outline-none transition-all"
                         placeholder="請輸入一個 Emoji"
                       />
-                      
+
                       <div className="mt-3 flex flex-wrap gap-2 justify-center max-h-32 overflow-y-auto p-2 bg-slate-50/50 rounded-2xl border border-slate-100/50">
                         {[
                           "🍔", "🍜", "☕", "🍺", "🍦", "🍎",
@@ -1408,7 +1405,7 @@ export default function App() {
                           "💰", "💳", "📈", "💻", "🏢", "📧",
                           "✨", "🏮", "🎈", "🐱", "🐶", "🌺"
                         ].map(emoji => (
-                          <button 
+                          <button
                             key={emoji}
                             type="button"
                             onClick={() => setNewCatEmoji(emoji)}
@@ -1421,8 +1418,8 @@ export default function App() {
                     </div>
                     <div>
                       <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 mb-1.5 block">分類名稱</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={newCatName}
                         onChange={(e) => setNewCatName(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-app-primary/20 outline-none transition-all placeholder:text-slate-300"
@@ -1432,7 +1429,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => {
                       if (newCatName && newCatEmoji) {
                         handleAddCustomCategory(newCatName, newCatEmoji, showAddCategory);
