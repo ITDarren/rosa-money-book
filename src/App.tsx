@@ -197,12 +197,19 @@ export default function App() {
     if (!user || !profile) return;
 
     const path = `users/${user.uid}/transactions`;
+    let ts = Timestamp.now();
+    if (data.date) {
+      const [y, m, d] = data.date.split("-").map(Number);
+      const now = new Date();
+      ts = Timestamp.fromDate(new Date(y, m - 1, d, now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds()));
+    }
+
     const newTransaction: Transaction = {
       amount: data.amount,
       type: data.type,
       category: data.category,
       note: data.note || "",
-      timestamp: data.date ? Timestamp.fromDate(new Date(data.date)) : Timestamp.now()
+      timestamp: ts
     };
 
     try {
