@@ -923,9 +923,14 @@ export default function App() {
                 <div className="bg-white rounded-3xl border border-slate-100 divide-y divide-slate-50 shadow-sm">
                   <div className="p-4 flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-600">總餘額</span>
-                    <span className="text-sm font-bold text-emerald-500">
-                      ${transactions.reduce((acc, t) => t.type === 'income' ? acc + t.amount : acc - t.amount, 0).toLocaleString()}
-                    </span>
+                    {(() => {
+                      const total = transactions.reduce((acc, t) => t.type === 'income' ? acc + t.amount : acc - t.amount, 0);
+                      return (
+                        <span className={`text-sm font-bold ${total < 0 ? 'text-red-500' : 'text-emerald-500'}`}>
+                          {total < 0 ? '-' : ''}${Math.abs(total).toLocaleString()}
+                        </span>
+                      );
+                    })()}
                   </div>
                   <div className="p-4 flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-600">上次活動</span>
