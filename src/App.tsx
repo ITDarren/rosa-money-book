@@ -1144,6 +1144,7 @@ export default function App() {
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-slate-400 uppercase">備註:</span>
                   <input
+                    type="search"
                     value={noteValue}
                     onChange={(e) => setNoteValue(e.target.value)}
                     placeholder="點擊輸入備註..."
@@ -1236,7 +1237,8 @@ export default function App() {
                 <div>
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">金額</label>
                   <input
-                    type="number"
+                    type="search"
+                    inputMode="decimal"
                     value={editingTransaction.amount}
                     onChange={(e) => setEditingTransaction({ ...editingTransaction, amount: Number(e.target.value) })}
                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-2xl font-mono font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-app-primary/20"
@@ -1273,7 +1275,7 @@ export default function App() {
                             : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"
                             }`}
                         >
-                          {cat.emoji} {cat.name}
+                          {cat.name}
                         </button>
                       ))}
                   </div>
@@ -1282,7 +1284,7 @@ export default function App() {
                 <div>
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">備註</label>
                   <input
-                    type="text"
+                    type="search"
                     value={editingTransaction.note}
                     onChange={(e) => setEditingTransaction({ ...editingTransaction, note: e.target.value })}
                     placeholder="寫點什麼..."
@@ -1401,7 +1403,7 @@ export default function App() {
                     <div>
                       <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 mb-1.5 block">圖示 Emoji</label>
                       <input
-                        type="text"
+                        type="search"
                         value={newCatEmoji}
                         onChange={(e) => setNewCatEmoji(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl text-center text-2xl focus:ring-2 focus:ring-app-primary/20 outline-none transition-all"
@@ -1431,7 +1433,7 @@ export default function App() {
                     <div>
                       <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 mb-1.5 block">分類名稱</label>
                       <input
-                        type="text"
+                        type="search"
                         value={newCatName}
                         onChange={(e) => setNewCatName(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-app-primary/20 outline-none transition-all placeholder:text-slate-300"
