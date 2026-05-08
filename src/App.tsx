@@ -592,7 +592,7 @@ export default function App() {
                           </div>
                           <div className="flex items-center gap-3">
                             <span className={`font-mono font-bold ${t.type === "income" ? "text-emerald-500" : "text-slate-800"}`}>
-                              {t.type === "income" ? "+" : ""}{t.amount.toLocaleString()}
+                              {t.type === "income" ? "+" : "-"}{t.amount.toLocaleString()}
                             </span>
                             <div className="flex items-center gap-1">
                               <button onClick={() => setEditingTransaction(t)} className="p-1.5 text-slate-200 hover:text-app-accent transition-colors">
