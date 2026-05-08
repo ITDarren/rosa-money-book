@@ -248,7 +248,9 @@ export default function App() {
     }
   };
 
-  const getCategoryDisplayName = (categoryId: string) => {
+  const getCategoryDisplayName = (categoryId: string, type?: string) => {
+    if (type === "expense" && EXPENSE_CATEGORIES[categoryId]) return EXPENSE_CATEGORIES[categoryId];
+    if (type === "income" && INCOME_CATEGORIES[categoryId]) return INCOME_CATEGORIES[categoryId];
     if (CATEGORIES[categoryId]) return CATEGORIES[categoryId];
     const custom = customCategories.find(c => c.id === categoryId);
     return custom ? custom.name : categoryId;
@@ -584,7 +586,7 @@ export default function App() {
                               {getCategoryEmoji(t.category, customCategories)}
                             </div>
                             <div>
-                              <p className="text-sm font-bold text-slate-700">{getCategoryDisplayName(t.category)}</p>
+                              <p className="text-sm font-bold text-slate-700">{getCategoryDisplayName(t.category, t.type)}</p>
                               <p className="text-[10px] text-slate-400">{t.note || "無備註"}</p>
                             </div>
                           </div>
@@ -663,8 +665,8 @@ export default function App() {
                       });
 
                       const chartData = [
-                        ...Object.entries(CATEGORIES),
-                        ...customCategories.map(c => [c.id || c.name, c.name])
+                        ...(statsType === "expense" ? Object.entries(EXPENSE_CATEGORIES) : Object.entries(INCOME_CATEGORIES)),
+                        ...customCategories.filter(c => c.type === statsType).map(c => [c.id || c.name, c.name])
                       ]
                         .map(([key, val]) => ({
                           name: val,
@@ -747,8 +749,8 @@ export default function App() {
                     });
 
                     const summaryData = [
-                      ...Object.entries(CATEGORIES),
-                      ...customCategories.map(c => [c.id || c.name, c.name])
+                      ...(statsType === "expense" ? Object.entries(EXPENSE_CATEGORIES) : Object.entries(INCOME_CATEGORIES)),
+                      ...customCategories.filter(c => c.type === statsType).map(c => [c.id || c.name, c.name])
                     ]
                       .map(([key, val]) => ({
                         id: key,
@@ -984,7 +986,7 @@ export default function App() {
                           <div key={id} className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
                             <div className="flex items-center gap-2 overflow-hidden">
                               <span className="text-lg flex-shrink-0">{getCategoryEmoji(id)}</span>
-                              <span className="text-xs font-medium text-slate-600 truncate">{label}</span>
+                              <span className="text-xs font-medium text-slate-600 truncate">{getCategoryDisplayName(id, catManageType)}</span>
                             </div>
                             <button
                               onClick={() => toggleCategoryVisibility(id)}
